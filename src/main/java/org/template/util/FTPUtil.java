@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.template.core.FTPLogin;
+import org.template.core.FTPTest;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -47,7 +47,7 @@ public class FTPUtil {
                     }
                     ftpClient.setControlEncoding(LOCAL_CHARSET);
                     ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-                    if("PORT".equals(FTPLogin.getModel())) {
+                    if("PORT".equals(FTPTest.getModel())) {
                         ftpClient.setActivePortRange(50000,65000);
                         ftpClient.enterLocalActiveMode();//主动
                     }else {

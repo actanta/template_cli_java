@@ -8,18 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.template.util.FTPUtil;
-import sun.misc.IOUtils;
 
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Slf4j
-public class FTPLogin {
+public class FTPTest {
 
     public static void main(String[] args) {
         checkArgs(args);
