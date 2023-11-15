@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.template.core.FTPLogin;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -46,7 +47,12 @@ public class FTPUtil {
                     }
                     ftpClient.setControlEncoding(LOCAL_CHARSET);
                     ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-                    ftpClient.enterLocalPassiveMode();
+                    if("PORT".equals(FTPLogin.getModel())) {
+                        ftpClient.setActivePortRange(50000,65000);
+                        ftpClient.enterLocalActiveMode();//主动
+                    }else {
+                        ftpClient.enterLocalPassiveMode();//被动
+                    }
                     if (bufferSize == null || bufferSize < 0) {
                         bufferSize = 1024 * 1024 * 128; //128MBytes
                     }
