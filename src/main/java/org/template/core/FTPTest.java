@@ -5,14 +5,20 @@ import cn.hutool.core.io.file.FileNameUtil;
 import com.beust.jcommander.Parameter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.template.util.FTPUtil;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Slf4j
@@ -49,6 +55,29 @@ public class FTPTest {
                 } else {
                     log.warn("outputStream is null：{}", remote);
                 }
+                //打印文件信息
+                FTPFile[] ftpFiles = ftpClient.listFiles(FTPUtil.getEncodedPath("/1.tgz"));
+                if(ftpFiles!=null && ftpFiles.length == 1){
+                    log.info("listFiles {}",ftpFiles[0]);
+                    Thread.sleep(3000);
+                }
+                //下载
+                InputStream inputStream = ftpClient.retrieveFileStream(FTPUtil.getEncodedPath("/1.tgz"));
+                OutputStream outputStream = Files.newOutputStream(Paths.get(System.getProperty("user.dir") + "/" + UUID.randomUUID().toString()));
+                long count;
+                long writeCount=0L;
+                byte[] buffer = new byte[8192];
+                int n;
+                for(count = 0L; -1 != (n = inputStream.read(buffer)); count += (long)n) {
+                    log.info("retrieveCount:{} n:{} count:{}",count+n,n,count);
+                    outputStream.write(buffer, 0, n);
+                    writeCount+=n;
+                    log.info("writeCount {}",writeCount);
+                }
+                IOUtils.copy(inputStream, outputStream);
+                IOUtils.close(inputStream);
+                IOUtils.close(outputStream);
+
                 FTPUtil.disconnect(ftpClient);
                 log.info("ftp disconnect!");
             }
